@@ -1,66 +1,63 @@
-## Foundry
+# Foundry Smart Contract Lottery
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A decentralized lottery system built with Solidity and Foundry, implementing Chainlink VRF for secure random number generation.
 
-Foundry consists of:
+## Features
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- Decentralized lottery system
+- Chainlink VRF integration for secure random number generation
+- Configurable entrance fee and time intervals
+- Automated winner selection and payment
+- Gas-optimized contract design
 
-## Documentation
+## Prerequisites
 
-https://book.getfoundry.sh/
+- [Foundry](https://book.getfoundry.sh/getting-started/installation)
+- Solidity ^0.8.19
+- Chainlink VRF v2
 
-## Usage
+## Installation
 
-### Build
-
-```shell
-$ forge build
+1. Clone the repository:
+```bash
+git clone https://github.com/adiel/foundry-smart-contract-lottery.git
+cd foundry-smart-contract-lottery
 ```
 
-### Test
-
-```shell
-$ forge test
+2. Install dependencies:
+```bash
+forge install
 ```
 
-### Format
+## Contract Details
 
-```shell
-$ forge fmt
+### Raffle.sol
+
+The main contract that handles:
+- Player registration
+- Random winner selection using Chainlink VRF
+- Prize distribution
+- Time-based raffle rounds
+
+#### Key Functions
+
+- `enterRaffle()`: Allows players to enter the raffle by paying the entrance fee
+- `pickWinner()`: Initiates the winner selection process using Chainlink VRF
+- `fulfillRandomWords()`: Callback function that processes the random number and selects the winner
+
+## Testing
+
+Run the test suite:
+```bash
+forge test
 ```
 
-### Gas Snapshots
+## Deployment
 
-```shell
-$ forge snapshot
+1. Configure your environment variables
+2. Deploy using Foundry:
+```bash
+forge create src/Raffle.sol:Raffle --rpc-url <your-rpc-url> --private-key <your-private-key>
 ```
 
-### Anvil
 
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
