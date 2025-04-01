@@ -19,6 +19,10 @@ contract RaffleTest is Test {
     uint64 public subscriptionId;
     uint256 public callbackGasLimit;
 
+    /* Events */
+    event RaffleEntered(address indexed player);
+    event WinnerPicked(address indexed winner); 
+
     function setUp() public {
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployContract();
@@ -44,7 +48,7 @@ contract RaffleTest is Test {
         raffle.enterRaffle();
     }
     
-    function testRaffleRecordsPlayerWhenTheyEnter() public {
+    function test_RaffleRecordsPlayerWhenTheyEnter() public {
         // Arrange
         vm.prank(PLAYER);
         // Act
@@ -53,4 +57,27 @@ contract RaffleTest is Test {
         address player = raffle.getPlayer(0);
         assert(player == PLAYER);   
     }
-}   
+
+    function test_EnteringRaffleEmitsEvent() public {
+        // Arrange
+        vm.prank(PLAYER);
+        // Act
+        vm.expectEmit(true, false, false, false, address(raffle));
+        emit RaffleEntered(PLAYER);
+        // Assert
+        raffle.enterRaffle{value: entranceFee}();
+    }   
+
+    function test_DontAllowwPlayersToEnterAfterRaffleIsCalculating() public {
+        // Arrange
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        raffle.performUpkeep("");
+        // Act / Assert
+        vm.expectRevert(Raffle.Raffle__RaffleNotOpen.selector);
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+    }
+}       

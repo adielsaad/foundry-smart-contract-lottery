@@ -48,7 +48,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
 
     /* State variables */   
-    RaffleState public s_raffleState; // Start as open
+    RaffleState private s_raffleState; // Start as open
     uint256 private immutable i_entranceFee;
     uint256 private immutable i_interval;
     address payable[] private s_players;
@@ -59,7 +59,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint32 private constant NUM_WORDS = 1;
     uint32 private immutable i_callbackGasLimit;
     bytes32 private immutable i_keyHash;
-    uint64 private immutable i_subscriptionId;
+    uint256 private immutable i_subscriptionId;
 
 
 
@@ -69,7 +69,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
 
-    constructor(uint256 entranceFee, uint256 interval, address vrfCoordinator, bytes32 keyHash, uint64 subscriptionId, uint32 callbackGasLimit) VRFConsumerBaseV2Plus(vrfCoordinator) {
+    constructor(uint256 entranceFee, uint256 interval, address vrfCoordinator, bytes32 keyHash, uint256 subscriptionId, uint32 callbackGasLimit) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
         i_callbackGasLimit = callbackGasLimit;
