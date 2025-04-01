@@ -68,7 +68,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     /* Events */
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
-
+    event RequestedRaffleWinner(uint256 indexed requestId);
     constructor(uint256 entranceFee, uint256 interval, address vrfCoordinator, bytes32 keyHash, uint256 subscriptionId, uint32 callbackGasLimit) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
@@ -118,8 +118,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
                 })
             )
         });
-        /* uint256 requestId = */ s_vrfCoordinator.requestRandomWords(request);
-        // emit RequestedRaffleWinner(requestId);
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+        emit RequestedRaffleWinner(requestId);
     }
     // When should the winner be picked?
     /**
@@ -176,5 +176,5 @@ contract Raffle is VRFConsumerBaseV2Plus {
     function getPlayer(uint256 index) external view returns (address) {
         return s_players[index];
     }
-
+    
 }

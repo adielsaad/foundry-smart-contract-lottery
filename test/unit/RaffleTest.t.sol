@@ -5,6 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {Raffle} from "src/Raffle.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
+import {Vm} from "forge-std/Vm.sol";
 
 contract RaffleTest is Test {
     Raffle public raffle;
@@ -129,5 +130,53 @@ contract RaffleTest is Test {
         // Assert
         assert(upkeepNeeded);
     }
-    
+
+    /*//////////////////////////////////////////////////////////////
+                             PERFORM UPKEEP 
+    //////////////////////////////////////////////////////////////*/
+
+    function test_PerformUpkeepCanOnlyRunIfCheckUpkeepIsTrue() public {
+        // Arrange
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        // Act / Assert 
+        raffle.performUpkeep("");
+    }
+
+    function test_PerformUpkeepRevertsIfCheckUpkeepIsFalse() public {
+        // Arrange
+        uint256 startingBalance = 0;
+        uint256 numPlayers = 0;
+        Raffle.RaffleState rState = raffle.getRaffleState();
+        // Act / Assert
+        vm.expectRevert(abi.encodeWithSelector(Raffle.Raffle__UpkeepNotNeeded.selector, rState, startingBalance, numPlayers));
+        raffle.performUpkeep("");
+    }
+
+    modifier raffleEntered() {
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        _;
+    }
+    // What if we need to get data from emitted events?
+    function test_PerformUpkeepUpdatesRaffleStateAndEmitsRequestId() public raffleEntered {
+        // Arrange
+        vm.prank(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        // Act
+        vm.recordLogs();
+        raffle.performUpkeep("");
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+        bytes32 requestId = entries[1].topics[1]; // 1st topic is the event signature
+        // Assert
+        Raffle.RaffleState rState = raffle.getRaffleState();
+        assert(uint256(requestId) > 0);
+        assert(uint256(rState) == uint256(Raffle.RaffleState.CALCULATING));
+    }
 }       
