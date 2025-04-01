@@ -43,6 +43,8 @@ contract HelperConfig is CodeConstants, Script {
             vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B,
             gasLane: 0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c,
             callbackGasLimit: 500000,
+            // TODO: Replace with your subscription ID after creating one
+            // You can create a subscription using the CreateSubscription script
             subscriptionId: 0,
             link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
         });
