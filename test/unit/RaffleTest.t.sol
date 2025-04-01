@@ -16,7 +16,7 @@ contract RaffleTest is Test {
     uint256 public interval;
     address public vrfCoordinator;
     bytes32 public gasLane;
-    uint64 public subscriptionId;
+    uint256 public subscriptionId;
     uint256 public callbackGasLimit;
 
     /* Events */
