@@ -27,6 +27,7 @@ contract HelperConfig is CodeConstants, Script {
         uint32 callbackGasLimit;
         uint256 subscriptionId;
         address link;
+        address account;
     }
 
     NetworkConfig public localNetworkConfig;
@@ -46,7 +47,8 @@ contract HelperConfig is CodeConstants, Script {
             // TODO: Replace with your subscription ID after creating one
             // You can create a subscription using the CreateSubscription script
             subscriptionId: 0,
-            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
+            account: 0xc0Bf06cE338FCFe868b9c43DA99a7C496892a15d
         });
     }
     function getConfigByChainId(uint256 chainId) public returns (NetworkConfig memory) {
@@ -85,7 +87,8 @@ contract HelperConfig is CodeConstants, Script {
             gasLane: 0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c,
             callbackGasLimit: 500000,
             subscriptionId: 0,
-            link: address(linkToken)
+            link: address(linkToken),
+            account: msg.sender
         });
         return localNetworkConfig;
     }
