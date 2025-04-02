@@ -10,4 +10,3 @@ install :; forge install cyfrin/foundry-devops --no-commit && forge install smar
 
 deploy-sepolia:
 	@forge script script/DeployRaffle.s.sol:DeployRaffle --rpc-url ${SEPOLIA_RPC_URL} --account ${KEYSTORE_SEPOLIA_ACCOUNT} --broadcast --verify --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
- 
